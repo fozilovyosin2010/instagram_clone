@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import Logo from "@/public/instagram.svg";
-import LoginForm from "@/src/features/login/ui/Form";
+import LoginForm from "@/src/features/auth/login/ui/Form";
 
 const page = () => {
   return (

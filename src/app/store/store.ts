@@ -1,8 +1,14 @@
+import { baseApi } from "@/src/shared/api/index";
+
 import { configureStore } from "@reduxjs/toolkit";
 
 export const makeStore = () =>
   configureStore({
-    reducer: {},
+    reducer: {
+      [baseApi.reducerPath]: baseApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(baseApi.middleware),
   });
 
 export type AppStore = ReturnType<typeof makeStore>;

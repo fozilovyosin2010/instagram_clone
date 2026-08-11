@@ -2,11 +2,13 @@
 
 import clsx from "clsx";
 
-import { Button } from "@/src/shared/model/shadcn/ui/button";
-import { Input } from "@/src/shared/model/shadcn/ui/input";
-
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ILoginFormValues } from "../types/index";
+import { ILoginFormValues, loginSchema } from "../types/index";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button, Input } from "@/src/shared/components";
+
+import { useLoginMutation } from "../../api/index";
 
 const inpList = [
   {
@@ -25,15 +27,26 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<ILoginFormValues>();
-
-  const hanLogin: SubmitHandler<ILoginFormValues> = (data) => {
-    console.log(data);
-  };
+  } = useForm<ILoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
   // check that inputs are not free
   const userNameInp = watch("username")?.trim().length;
   const passwordInp = watch("password")?.trim().length;
+
+  // here
+  const [loginUser, { isLoading, isSuccess, isError }] = useLoginMutation();
+
+  const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
+    try {
+      const { data } = await loginUser(e).unwrap();
+      console.log(data);
+    } catch (error) {
+      // here add toaster (snackbar) from shadcn
+      console.log(error);
+    }
+  };
 
   return (
     <form
@@ -49,12 +62,21 @@ const LoginForm = () => {
                   "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300 px-2",
                   (e.name == "username" && !userNameInp) ||
                     (e.name == "password" && !passwordInp)
-                    ? "bg-[#fff] absolute left-0 top-3 ml-2 text-[#857a7a] text-[16px] truncate z-20"
-                    : // userNameInp &&
-                      "bg-[#fff] absolute left-0 top-0 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20",
+                    ? "bg-[#fff] absolute left-0 top-3 ml-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]"
+                    : "bg-[#000] absolute left-0 top-0 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",
                 )}
               >
-                {e.placeholder}
+                <p
+                  className={clsx(
+                    // if error is true
+                    errors?.[e.name as "username" | "password"]?.message &&
+                      "text-red-500 ",
+                    "font-[600]",
+                  )}
+                >
+                  {errors?.[e.name as "username" | "password"]?.message ||
+                    e.placeholder}
+                </p>
               </span>
               <Input
                 {...register(e.name as "username" | "password")}
