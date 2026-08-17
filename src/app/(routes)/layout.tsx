@@ -30,12 +30,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body>
         <RootProvider>
           <header className="border-b pb-3">
             <ToggleBtn />
           </header>
-          {children}
+          <main className="min-h-[calc(100%-62px)]">{children}</main>
         </RootProvider>
       </body>
     </html>

@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@/src/shared/components";
 
 import { useLoginMutation } from "../../api/index";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 const inpList = [
   {
@@ -21,7 +23,7 @@ const inpList = [
   },
 ];
 
-const LoginForm = () => {
+export const LoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -35,8 +37,8 @@ const LoginForm = () => {
   const userNameInp = watch("username")?.trim().length;
   const passwordInp = watch("password")?.trim().length;
 
-  // here
-  const [loginUser, { isLoading, isSuccess, isError }] = useLoginMutation();
+  // login
+  const [loginUser, { isLoading, isError, isSuccess }] = useLoginMutation();
 
   const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
@@ -48,6 +50,12 @@ const LoginForm = () => {
     }
   };
 
+  const [isShowingPass, setIsShowingPass] = useState(false);
+
+  function hanTogglePass() {
+    setIsShowingPass((e) => !e);
+  }
+
   return (
     <form
       onSubmit={handleSubmit(hanLogin)}
@@ -56,14 +64,15 @@ const LoginForm = () => {
       <div className="flex flex-col gap-3">
         {inpList.map((e) => {
           return (
-            <div key={e.name} className="relative rounded-md border group">
+            <div key={e.name} className="relative border rounded-md group">
+              {/* label */}
               <span
                 className={clsx(
-                  "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300 px-2",
+                  "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300",
                   (e.name == "username" && !userNameInp) ||
                     (e.name == "password" && !passwordInp)
-                    ? "bg-[#fff] absolute left-0 top-3 ml-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]"
-                    : "bg-[#000] absolute left-0 top-0 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",
+                    ? "bg-[#fff] absolute left-0 top-4 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)] max-md:top-3"
+                    : "bg-[#fffF] absolute left-0 top-0 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",
                 )}
               >
                 <p
@@ -78,23 +87,36 @@ const LoginForm = () => {
                     e.placeholder}
                 </p>
               </span>
-              <Input
-                {...register(e.name as "username" | "password")}
-                className="p-[20px] w-full border-none bg-[#fff] text-[18px] relative z-10 outline-none pt-[30px]"
-                type={e.name === "password" ? "password" : "text"}
-              />
+              <div className="flex items-center px-2 bg-[#ff]  rounded-md dark:bg-[rgb(20,20,22)]">
+                <input
+                  {...register(e.name as "username" | "password")}
+                  className="p-2 w-full border-none text-[14px] font-[600] relative z-10 outline-none pt-[20px] bg-transparent max-md:p-1 max-md:pt-[15px]"
+                  type={
+                    e.name === "password" && !isShowingPass
+                      ? "password"
+                      : "text"
+                  }
+                />
+                {/* for password */}
+                {e.name === "password" && (
+                  <span
+                    onClick={hanTogglePass}
+                    className=" cursor-pointer z-20"
+                  >
+                    {isShowingPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
       <Button
         type="submit"
-        className="rounded-[10px] p-[16px_32px] font-[500] text-[16px]"
+        className="rounded-[10px] p-[16px_32px] font-[600] font-serif text-[14px]"
       >
         Log in
       </Button>
     </form>
   );
 };
-
-export default LoginForm;

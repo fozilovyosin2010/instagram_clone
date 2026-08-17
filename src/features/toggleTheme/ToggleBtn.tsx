@@ -1,8 +1,18 @@
 "use client";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export const ToggleBtn = () => {
   const { theme, setTheme } = useTheme();
+
+  const [mount, setMount] = useState(false);
+
+  // here
+  useEffect(() => {
+    setMount(true);
+  }, []);
+
+  if (!mount) return;
 
   function hanToggle() {
     setTheme(theme === "dark" ? "light" : "dark");
