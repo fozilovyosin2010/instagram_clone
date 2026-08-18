@@ -7,7 +7,6 @@ export const ToggleBtn = () => {
 
   const [mount, setMount] = useState(false);
 
-  // here
   useEffect(() => {
     setMount(true);
   }, []);

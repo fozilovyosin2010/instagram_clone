@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const layout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="cont flex justify-between pt-3 px-6 max-md:justify-center max-md:pt-[70px] max-md:px-12">
+    <div className="cont flex justify-between gap-[30px] py-5 px-6 max-md:justify-center max-md:pt-[70px] max-sm:px-2">
       <div className="block1 flex flex-col items-center gap-[30px] max-md:hidden">
         <Image alt="instagram-pictures" className="w-[350px]" src={phone} />
 
@@ -24,9 +24,9 @@ const layout = ({ children }: { children: ReactNode }) => {
         </div>
       </div>
 
-      <div className="block2 flex flex-col justify-between gap-4">
-        <div className="max-w-[500px]">{children}</div>
-        <div className="space-x-2 border p-[20px_40px] rounded-lg text-[16px]">
+      <div className="block2 w-[400px] min-w-[300px] max-w-[500px] max-md:w-full mx-5 flex flex-col justify-between gap-[50px]">
+        <div className="">{children}</div>
+        <div className="space-x-2 border p-[20px_40px] rounded-lg text-[16px] max-md:p-[10px_20px] text-center">
           <span>Don't have an account yet?</span>
           <Link href="/register" className="text-purple-600 font-[600]">
             Sign up

@@ -6,11 +6,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ILoginFormValues, loginSchema } from "../types/index";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button, Input } from "@/src/shared/components";
+import { Button, CustomToaster } from "@/src/shared/components/index";
 
 import { useLoginMutation } from "../../api/index";
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { CircleCheck, Eye, EyeOff, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const inpList = [
   {
@@ -56,6 +57,27 @@ export const LoginForm = () => {
     setIsShowingPass((e) => !e);
   }
 
+  useEffect(() => {
+    if (isSuccess)
+      toast.custom(
+        (t) => (
+          <CustomToaster
+            type="success"
+            icon={CircleCheck}
+            title="Success"
+            des="You are successfully logged in!"
+            onClose={() => {
+              console.log("toaster");
+
+              toast.dismiss(t);
+            }}
+          />
+        ),
+        // prevents from dublication
+        { id: "login-toast" },
+      );
+  }, [isSuccess]);
+
   return (
     <form
       onSubmit={handleSubmit(hanLogin)}
@@ -68,11 +90,11 @@ export const LoginForm = () => {
               {/* label */}
               <span
                 className={clsx(
-                  "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300",
+                  "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300 truncate max-w-full",
                   (e.name == "username" && !userNameInp) ||
                     (e.name == "password" && !passwordInp)
-                    ? "bg-[#fff] absolute left-0 top-4 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)] max-md:top-3"
-                    : "bg-[#fffF] absolute left-0 top-0 ml-2 px-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",
+                    ? "bg-[#fff] absolute left-0 top-4 mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)] max-md:top-3"
+                    : "bg-[#fffF] absolute left-0 top-0 mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",
                 )}
               >
                 <p
@@ -111,6 +133,7 @@ export const LoginForm = () => {
           );
         })}
       </div>
+
       <Button
         type="submit"
         className="rounded-[10px] p-[16px_32px] font-[600] font-serif text-[14px]"

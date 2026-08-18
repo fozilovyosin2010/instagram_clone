@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import RootProvider from "../Provider/RootProvider";
 import { ToggleBtn } from "@/src/features/toggleTheme";
+import { Toaster } from "@/src/shared/components/index";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,10 @@ export default function RootLayout({
           <header className="border-b pb-3">
             <ToggleBtn />
           </header>
-          <main className="min-h-[calc(100%-62px)]">{children}</main>
+
+          <Toaster />
+
+          <main className="min-h-full">{children}</main>
         </RootProvider>
       </body>
     </html>
