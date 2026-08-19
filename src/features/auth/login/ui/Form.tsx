@@ -3,14 +3,14 @@
 import clsx from "clsx";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ILoginFormValues, loginSchema } from "../types/index";
+import { ILoginFormValues, IresLogin, loginSchema } from "../types/index";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button, CustomToaster } from "@/src/shared/components/index";
 
 import { useLoginMutation } from "../../api/index";
-import { CircleCheck, Eye, EyeOff, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CircleCheck, CircleX, Eye, EyeOff, X } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const inpList = [
@@ -39,15 +39,45 @@ export const LoginForm = () => {
   const passwordInp = watch("password")?.trim().length;
 
   // login
-  const [loginUser, { isLoading, isError, isSuccess }] = useLoginMutation();
+  const [loginUser, { isError, isSuccess }] = useLoginMutation();
 
   const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
       const { data } = await loginUser(e).unwrap();
       console.log(data);
+      if (data)
+        toast.custom(
+          (t) => (
+            <CustomToaster
+              type="success"
+              icon={<CircleCheck color="#fff" />}
+              title="Success"
+              des="You are successfully logged in!"
+              onClose={() => toast.dismiss(t)}
+            />
+          ),
+          // prevents from dublication
+          {
+            id: "login-toast-error",
+          },
+        );
     } catch (error) {
-      // here add toaster (snackbar) from shadcn
-      console.log(error);
+      const errorMessage = (error as IresLogin).data.errors?.join(" ");
+      toast.custom(
+        (t) => (
+          <CustomToaster
+            type="error"
+            icon={<CircleX />}
+            title="Error"
+            des={errorMessage as string}
+            onClose={() => toast.dismiss(t)}
+          />
+        ),
+        {
+          id: "login-toast-success",
+          duration: 10000,
+        },
+      );
     }
   };
 
@@ -56,27 +86,6 @@ export const LoginForm = () => {
   function hanTogglePass() {
     setIsShowingPass((e) => !e);
   }
-
-  useEffect(() => {
-    if (isSuccess)
-      toast.custom(
-        (t) => (
-          <CustomToaster
-            type="success"
-            icon={CircleCheck}
-            title="Success"
-            des="You are successfully logged in!"
-            onClose={() => {
-              console.log("toaster");
-
-              toast.dismiss(t);
-            }}
-          />
-        ),
-        // prevents from dublication
-        { id: "login-toast" },
-      );
-  }, [isSuccess]);
 
   return (
     <form

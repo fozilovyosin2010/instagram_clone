@@ -1,1 +1,1 @@
-export { type ILoginFormValues, loginSchema } from "./type";
+export { type ILoginFormValues, loginSchema, type IresLogin } from "./type";

@@ -4,6 +4,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes loadAnimation {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.loader {
+  animation: loadAnimation 4s linear 1;
+}
+
 .cont {
   max-width: 1440px;
   margin: 0 auto;

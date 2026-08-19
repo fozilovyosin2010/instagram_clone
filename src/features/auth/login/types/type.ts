@@ -13,3 +13,8 @@ export const loginSchema = z.object({
 });
 
 export type ILoginFormValues = z.infer<typeof loginSchema>;
+
+export interface IresLogin {
+  status: number;
+  data: { data: string | null; errors: string[] | null; statusCode: number };
+}
