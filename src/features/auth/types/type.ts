@@ -18,3 +18,16 @@ export interface IresLogin {
   status: number;
   data: { data: string | null; errors: string[] | null; statusCode: number };
 }
+
+export interface IinpFields {
+  name: string;
+  type: "text" | "password" | "email";
+  label: string;
+}
+[];
+
+export interface IauthForm {
+  formType: "login" | "register";
+  inpFields: IinpFields[];
+  btnSubmit: string;
+}

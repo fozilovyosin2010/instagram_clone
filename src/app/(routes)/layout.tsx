@@ -31,6 +31,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {/* here proxy.ts */}
       <body>
         <RootProvider>
           <header className="border-b pb-3">
