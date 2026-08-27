@@ -20,7 +20,8 @@ const useAuth = (formType: "login" | "register") => {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-  } = useForm<ILoginFormValues>({
+    control,
+  } = useForm<ILoginFormValues | any>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -34,6 +35,8 @@ const useAuth = (formType: "login" | "register") => {
 
   const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
+      console.log(e);
+
       const { data } = await loginUser(e).unwrap();
       // expire token after 6 months
       saveToken(data, 6);
@@ -78,11 +81,9 @@ const useAuth = (formType: "login" | "register") => {
   };
 
   return {
-    register,
-    errors,
     isSubmitting,
-    watch,
-    onSubmit: formType === "login" && handleSubmit(hanLogin),
+    control,
+    onSubmit: formType === "login" ? handleSubmit(hanLogin) : undefined,
   };
 };
 

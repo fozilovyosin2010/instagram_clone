@@ -24,10 +24,16 @@ export interface IinpFields {
   type: "text" | "password" | "email";
   label: string;
 }
-[];
 
 export interface IauthForm {
   formType: "login" | "register";
   inpFields: IinpFields[];
   btnSubmit: string;
+}
+
+export interface ItextFieldForm {
+  errorMessage: string | undefined;
+  label: string;
+  type: "text" | "password" | "email";
+  field: any;
 }
