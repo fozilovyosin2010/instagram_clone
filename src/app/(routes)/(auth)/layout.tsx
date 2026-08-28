@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import Link from "next/link";
 
 const layout = ({ children }: { children: ReactNode }) => {
+  // here create custom header of tracking page
   return (
     <div className="cont flex justify-between gap-[30px] py-5 px-6 max-md:justify-center max-md:pt-[70px] max-sm:px-2">
       <div className="block1 flex flex-col items-center gap-[30px] max-md:hidden">

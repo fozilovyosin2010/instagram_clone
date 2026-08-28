@@ -2,19 +2,57 @@ import z from "zod";
 
 export const loginSchema = z.object({
   username: z
-    .string()
-    .nonempty("Please fill username.")
+    .string("Please fill username")
+    .nonempty("Please fill username")
+    .min(3, { message: "Minimum 3 symbols" })
     .max(20, { message: "Maximum 20 symbols" }),
 
   password: z
-    .string()
-    .nonempty("Please fill password.")
+    .string("Please fill password")
+    .nonempty("Please fill password")
+    .min(4, { message: "Minimum 4 symbols" })
     .max(20, { message: "Maximum 20 symbols" }),
 });
 
-export type ILoginFormValues = z.infer<typeof loginSchema>;
+export const registerSchema = z
+  .object({
+    username: z
+      .string("Please fill username")
+      .nonempty("Please fill username")
+      .min(3, { message: "Minimum 3 symbols" })
+      .max(20, { message: "Maximum 20 symbols" }),
+    fullname: z
+      .string("Please fill fullname")
+      .nonempty("Please fill fullname")
+      .min(3, { message: "Minimum 3 symbols" })
+      .max(20, { message: "Maximum 20 symbols" }),
+    email: z
+      .email("Please fill email")
+      .nonempty("Please fill email")
+      .min(3, { message: "Minimum 3 symbols" })
+      .max(20, { message: "Maximum 20 symbols" }),
+    password: z
+      .string("Please fill password")
+      .nonempty("Please fill password")
+      .min(4, { message: "Minimum 4 symbols" })
+      .max(20, { message: "Maximum 20 symbols" }),
 
-export interface IresLogin {
+    confirmPassword: z
+      .string("Please fill password")
+      .nonempty("Please fill password"),
+  })
+  // custom logic
+  .refine((e) => e.confirmPassword == e.password, {
+    // check if true then don't show an error
+    message: "ConfirmPassword doesn't match password",
+    // where this logic belongs
+    path: ["confirmPassword"],
+  });
+
+export type ILoginFormValues = z.infer<typeof loginSchema>;
+export type IRegisterFormValues = z.infer<typeof registerSchema>;
+
+export interface IresAuth {
   status: number;
   data: { data: string | null; errors: string[] | null; statusCode: number };
 }

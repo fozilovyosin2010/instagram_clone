@@ -11,7 +11,7 @@ const inpList: IinpFields[] = [
   { name: "fullname", type: "text", label: "Fullname" },
   { name: "email", type: "email", label: "Email" },
   { name: "password", type: "password", label: "Password" },
-  { name: "confirmPassword", type: "text", label: "confirmPassword" },
+  { name: "confirmPassword", type: "text", label: "ConfirmPassword" },
 ];
 
 const page = () => {

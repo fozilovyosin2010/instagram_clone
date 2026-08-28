@@ -12,7 +12,6 @@ import TextFieldForm from "./TextFieldForm";
 import { Controller } from "react-hook-form";
 
 export const AuthForm = ({ formType, inpFields, btnSubmit }: IauthForm) => {
-  // here make a flex auth
   const { isSubmitting, onSubmit, control } = useAuth(formType);
 
   console.log("render");

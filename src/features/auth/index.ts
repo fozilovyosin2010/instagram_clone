@@ -4,7 +4,7 @@ export { useLoginMutation } from "./api/authApi";
 
 export type {
   ILoginFormValues,
-  IresLogin,
+  IresAuth,
   IauthForm,
   IinpFields,
 } from "./types/type";

@@ -17,7 +17,6 @@ const TextFieldForm = ({
   const [isShowingPass, setIsShowingPass] = useState(false);
 
   function hanTogglePass() {
-    // here
     setIsShowingPass((e) => !e);
   }
 
@@ -27,9 +26,7 @@ const TextFieldForm = ({
       <span
         className={clsx(
           "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300 truncate max-w-full",
-          // here correct the logic
-          // (e.name == "username" && !userNameInp) ||
-          //   (e.name == "password" && !passwordInp)
+
           !field?.value?.trim()
             ? "bg-[#fff] absolute left-0 top-4 mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)] max-md:top-3"
             : "bg-[#fff] absolute left-0 top-0 mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",

@@ -1,20 +1,21 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
-  // here make auth guard
   const path = request.nextUrl.pathname;
+  const isAuthPage = path === "/login" || path === "/register";
 
   const token = request.cookies.get("auth_token") || "";
 
-  if (path === "/login" && token)
+  if (isAuthPage && token)
     return NextResponse.redirect(new URL("/", request.nextUrl));
 
-  if (path !== "/login" && !token)
+  if (isAuthPage && !token)
     return NextResponse.redirect(new URL("/login", request.nextUrl));
 
+  const obj = { great: "hello" };
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/login", "/"],
+  matcher: ["/login", "/register", "/"],
 };

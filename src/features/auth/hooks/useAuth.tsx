@@ -4,25 +4,24 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
   ILoginFormValues,
-  IresLogin,
+  IresAuth,
   loginSchema,
   useLoginMutation,
-} from "../index";
+} from "@/src/features/auth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { CircleCheck, CircleX } from "lucide-react";
+import { IRegisterFormValues, registerSchema } from "../types/type";
+import { useRegisterMutation } from "../api/authApi";
 
 const useAuth = (formType: "login" | "register") => {
-  // here make another schema for register
   const {
-    register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
+    formState: { isSubmitting },
     control,
   } = useForm<ILoginFormValues | any>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(formType === "login" ? loginSchema : registerSchema),
   });
 
   function saveToken(token: string, exp: number) {
@@ -32,11 +31,44 @@ const useAuth = (formType: "login" | "register") => {
   }
 
   const [loginUser] = useLoginMutation();
+  const [registerUser] = useRegisterMutation();
+
+  const hanRegister: SubmitHandler<IRegisterFormValues> = async (e) => {
+    try {
+      await registerUser(e).unwrap();
+
+      const obj = {
+        username: e.username,
+        password: e.password,
+      };
+
+      await hanLogin(obj);
+    } catch (error) {
+      if ((error as IresAuth).data?.errors) {
+        const errorMessage: string | any = (
+          error as IresAuth
+        ).data.errors?.join(" ");
+        toast.custom(
+          (t) => (
+            <CustomToaster
+              type="error"
+              icon={<CircleX />}
+              title="Error"
+              des={errorMessage as string}
+              onClose={() => toast.dismiss(t)}
+            />
+          ),
+          // prevents from dublication & formType to seperate login/register
+          {
+            id: `login-toast-success-${formType}`,
+          },
+        );
+      }
+    }
+  };
 
   const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
-      console.log(e);
-
       const { data } = await loginUser(e).unwrap();
       // expire token after 6 months
       saveToken(data, 6);
@@ -57,9 +89,9 @@ const useAuth = (formType: "login" | "register") => {
         },
       );
     } catch (error) {
-      if ((error as IresLogin).data?.errors) {
+      if ((error as IresAuth).data?.errors) {
         const errorMessage: string | any = (
-          error as IresLogin
+          error as IresAuth
         ).data.errors?.join(" ");
         toast.custom(
           (t) => (
@@ -83,7 +115,7 @@ const useAuth = (formType: "login" | "register") => {
   return {
     isSubmitting,
     control,
-    onSubmit: formType === "login" ? handleSubmit(hanLogin) : undefined,
+    onSubmit: handleSubmit(formType === "login" ? hanLogin : hanRegister),
   };
 };
 
