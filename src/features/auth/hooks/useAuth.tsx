@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { CircleCheck, CircleX } from "lucide-react";
 import { IRegisterFormValues, registerSchema } from "../types/type";
 import { useRegisterMutation } from "../api/authApi";
+import { useRouter } from "next/navigation";
 
 const useAuth = (formType: "login" | "register") => {
   const {
@@ -23,6 +24,8 @@ const useAuth = (formType: "login" | "register") => {
   } = useForm<ILoginFormValues | any>({
     resolver: zodResolver(formType === "login" ? loginSchema : registerSchema),
   });
+
+  const router = useRouter();
 
   function saveToken(token: string, exp: number) {
     const months = 1000 * 60 * 60 * 24 * 30;
@@ -88,6 +91,8 @@ const useAuth = (formType: "login" | "register") => {
           id: `login-toast-error-${formType}`,
         },
       );
+
+      router.push("/login");
     } catch (error) {
       if ((error as IresAuth).data?.errors) {
         const errorMessage: string | any = (

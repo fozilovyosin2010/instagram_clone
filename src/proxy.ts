@@ -9,10 +9,9 @@ export function proxy(request: NextRequest) {
   if (isAuthPage && token)
     return NextResponse.redirect(new URL("/", request.nextUrl));
 
-  if (isAuthPage && !token)
+  if (!isAuthPage && !token)
     return NextResponse.redirect(new URL("/login", request.nextUrl));
 
-  const obj = { great: "hello" };
   return NextResponse.next();
 }
 

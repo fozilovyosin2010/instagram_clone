@@ -1,1 +1,1 @@
-export { ToggleBtn } from "./ToggleBtn";
+export { ToggleBtn } from "./ui/ToggleBtn";

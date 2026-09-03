@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../globals.css";
+import "@/src/app/globals.css";
 import RootProvider from "../Provider/RootProvider";
-import { ToggleBtn } from "@/src/features/toggleTheme";
 import { Toaster } from "@/src/shared/components/index";
+import { SideBar } from "@/src/widgets/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,15 +31,23 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <style precedence="medium" href="fonts">
+        @import
+        url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pacifico&display=swap');
+      </style>
       <body>
         <RootProvider>
-          <header className="border-b pb-3">
+          {/* here */}
+
+          {/* <header className="border-b pb-3">
             <ToggleBtn />
-          </header>
+          </header> */}
+
+          <SideBar />
 
           <Toaster />
 
-          <main className="min-h-full">{children}</main>
+          <main className="min-h-full ml-[400px]">{children}</main>
         </RootProvider>
       </body>
     </html>
