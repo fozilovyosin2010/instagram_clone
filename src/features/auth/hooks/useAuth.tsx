@@ -30,6 +30,8 @@ const useAuth = (formType: "login" | "register") => {
   function saveToken(token: string, exp: number) {
     const months = 1000 * 60 * 60 * 24 * 30;
 
+    // const obj={token:}
+
     document.cookie = `auth_token=${token}; max-age=${months * exp}; same-site=strict; secure`;
   }
 

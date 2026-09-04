@@ -13,6 +13,11 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import Logo from "@/public/instagram.svg";
+
+import { ActionBtn } from "@/src/features/action-btn";
+import { IactionList } from "@/src/features/action-btn/types/type";
+
 const pageList = [
   { icon: <House />, name: "Home", url: "/" },
   { icon: <Compass />, name: "Interestings", url: "/interestings" },
@@ -22,35 +27,25 @@ const pageList = [
   { icon: <CircleUserRound />, name: "Profile", url: "/profile" },
 ];
 
-import Logo from "@/public/instagram.svg";
-
-import { ActionBtn } from "@/src/features/action-btn";
-import { IactionList } from "@/src/features/action-btn/types/type";
-
-// here
 const actionList: IactionList[] = [
   {
     text: "Setting",
     icon: <Settings />,
-    onClick: "",
     isDestructive: false,
   },
   {
     text: "Switch account",
     icon: <ArrowLeftRight />,
-    onClick: "",
     isDestructive: false,
   },
   {
     text: "Log out",
     icon: <LogOut />,
-    onClick: "",
     isDestructive: true,
   },
 ];
 
 export const SideBar = () => {
-  // here this component must be SSR
   return (
     <aside className="fixed left-0 top-0 bottom-0 border-r h-full w-[270px] flex flex-col justify-between">
       <div>
@@ -81,8 +76,6 @@ export const SideBar = () => {
         </nav>
       </div>
       <div className="flex gap-3 items-center p-[10px_20px] duration-400 border-t pt-3">
-        {/* <Menu /> */}
-
         <ActionBtn children={actionList} />
       </div>
     </aside>
