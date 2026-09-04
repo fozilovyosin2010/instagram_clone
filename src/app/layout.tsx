@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/src/app/globals.css";
 import RootProvider from "./Provider/RootProvider";
+import { Toaster } from "../shared/components";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ export default function RootLayout({
         url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pacifico&display=swap');
       </style>
       <body>
-        <RootProvider>{children} </RootProvider>
+        <Toaster />
+
+        <RootProvider>{children}</RootProvider>
       </body>
     </html>
   );

@@ -30,9 +30,9 @@ const useAuth = (formType: "login" | "register") => {
   function saveToken(token: string, exp: number) {
     const months = 1000 * 60 * 60 * 24 * 30;
 
-    // const obj={token:}
+    const obj = { acces_token: token };
 
-    document.cookie = `auth_token=${token}; max-age=${months * exp}; same-site=strict; secure`;
+    document.cookie = `auth_token=${JSON.stringify(obj)}; max-age=${months * exp}; same-site=strict; secure`;
   }
 
   const [loginUser] = useLoginMutation();
@@ -94,7 +94,7 @@ const useAuth = (formType: "login" | "register") => {
         },
       );
 
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       if ((error as IresAuth).data?.errors) {
         const errorMessage: string | any = (

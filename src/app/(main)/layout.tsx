@@ -8,13 +8,11 @@ const layout = ({
 }>) => {
   return (
     <div>
-      {" "}
       {/* here */}
       {/* <header className="border-b pb-3">
             <ToggleBtn />
           </header> */}
       <SideBar />
-      <Toaster />
       <main className="min-h-full ml-[400px]">{children}</main>
     </div>
   );

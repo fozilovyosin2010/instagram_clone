@@ -6,13 +6,16 @@ export function proxy(request: NextRequest) {
 
   const token = request.cookies.get("auth_token") || "";
 
+  const headers = new Headers(request.headers);
+  headers.set("x-url", request.nextUrl.pathname);
+
   if (isAuthPage && token)
     return NextResponse.redirect(new URL("/", request.nextUrl));
 
   if (!isAuthPage && !token)
     return NextResponse.redirect(new URL("/login", request.nextUrl));
 
-  return NextResponse.next();
+  return NextResponse.next({ headers });
 }
 
 export const config = {
