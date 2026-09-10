@@ -45,7 +45,7 @@ const layout = async ({ children }: { children: ReactNode }) => {
           {children}
         </div>
         <div className="space-x-2 border p-[20px_40px] rounded-lg text-[16px] max-md:p-[10px_20px] text-center">
-          {path === "/login" ? (
+          {path === "/register" ? (
             <>
               <span>Already have an account?</span>
               <Link href="/login" className="text-purple-600 font-[600]">
