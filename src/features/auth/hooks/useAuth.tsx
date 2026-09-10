@@ -16,6 +16,9 @@ import { IRegisterFormValues, registerSchema } from "../types/type";
 import { useRegisterMutation } from "../api/authApi";
 import { useRouter } from "next/navigation";
 
+import { jwtDecode } from "jwt-decode";
+import { setToken } from "@/src/shared/utils/logic";
+
 const useAuth = (formType: "login" | "register") => {
   const {
     handleSubmit,
@@ -27,12 +30,40 @@ const useAuth = (formType: "login" | "register") => {
 
   const router = useRouter();
 
-  function saveToken(token: string, exp: number) {
-    const months = 1000 * 60 * 60 * 24 * 30;
+  // here optimize the code
+  function saveToken(token: string, exp1: number) {
+    const expire = 24 * 30 * exp1;
+    //  here
+    // goal: to make multi account, user could choose in which logged account to enter
+    const accounts = localStorage["accounts_instagram_clone"] || null;
+    const { sid, name, exp } = jwtDecode<{
+      sid: string;
+      name: string;
+      exp: number;
+    }>(token);
 
-    const obj = { acces_token: token };
+    let arr = JSON.parse(accounts) || [];
 
-    document.cookie = `auth_token=${JSON.stringify(obj)}; max-age=${months * exp}; same-site=strict; secure`;
+    const dubElem: { sid: string; name: string; exp: number } = arr.find(
+      (e: { sid: string; name: string; exp: number }) => e.sid === sid,
+    );
+    console.log(dubElem);
+
+    const isDublicate = !!dubElem;
+
+    if (!isDublicate) arr.push({ sid, name, token, exp });
+    // changing the obj if its expireDate is longer
+    else if (isDublicate && dubElem.exp < exp) {
+      const arr2 = arr.map((e: any) =>
+        e.sid === dubElem.sid ? { sid, name, token, exp } : e,
+      );
+
+      arr = [...arr2];
+    }
+
+    localStorage.setItem("accounts_instagram_clone", JSON.stringify(arr));
+
+    setToken(token);
   }
 
   const [loginUser] = useLoginMutation();
@@ -75,8 +106,13 @@ const useAuth = (formType: "login" | "register") => {
   const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
       const { data } = await loginUser(e).unwrap();
-      // expire token after 6 months
-      saveToken(data, 6);
+      // expire token after 12 months
+
+      saveToken(
+        data,
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwZjdhYzlhOC1iMzk3LTRjOGYtYWMwMy00MjMwY2E4ZTkyMjciLCJuYW1lIjoicGV0ZXIiLCJlbWFpbCI6ImZ3aWpvd2VAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc4NzkzOTE1MiwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.TK5ZOwiC1ejSe9uocty_mfdkoFEYtq4cLc9b0R9fIz4",
+        12,
+      );
 
       toast.custom(
         (t) => (

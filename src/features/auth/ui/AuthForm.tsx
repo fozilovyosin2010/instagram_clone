@@ -14,11 +14,8 @@ import { Controller } from "react-hook-form";
 export const AuthForm = ({ formType, inpFields, btnSubmit }: IauthForm) => {
   const { isSubmitting, onSubmit, control } = useAuth(formType);
 
-  console.log("render");
-
   return (
     <form
-      method="POST"
       onSubmit={onSubmit as any}
       className="flex flex-col justify-between gap-[50px]"
     >
