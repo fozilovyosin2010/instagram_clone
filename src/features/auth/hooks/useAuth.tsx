@@ -12,12 +12,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { CircleCheck, CircleX } from "lucide-react";
-import { IRegisterFormValues, registerSchema } from "../types/type";
+import { IaccElem, IRegisterFormValues, registerSchema } from "../types/type";
 import { useRegisterMutation } from "../api/authApi";
 import { useRouter } from "next/navigation";
 
 import { jwtDecode } from "jwt-decode";
-import { setToken } from "@/src/shared/utils/logic";
 
 const useAuth = (formType: "login" | "register") => {
   const {
@@ -30,40 +29,43 @@ const useAuth = (formType: "login" | "register") => {
 
   const router = useRouter();
 
-  // here optimize the code
-  function saveToken(token: string, exp1: number) {
-    const expire = 24 * 30 * exp1;
-    //  here
-    // goal: to make multi account, user could choose in which logged account to enter
-    const accounts = localStorage["accounts_instagram_clone"] || null;
+  // HERE correct login logic
+  function saveToken(token: string) {
+    const localKey = "instagram_clone";
+
     const { sid, name, exp } = jwtDecode<{
       sid: string;
       name: string;
       exp: number;
     }>(token);
 
-    let arr = JSON.parse(accounts) || [];
+    const accounts = localStorage[localKey] || null;
 
-    const dubElem: { sid: string; name: string; exp: number } = arr.find(
-      (e: { sid: string; name: string; exp: number }) => e.sid === sid,
-    );
-    console.log(dubElem);
+    let obj = JSON.parse(accounts) || {};
 
-    const isDublicate = !!dubElem;
+    if (!accounts) {
+      obj = {
+        currentId: sid,
+        acc_s: [{ sid, name, token, exp: exp * 1000 }],
+      };
+    } else {
+      const dubElem = obj["acc_s"].find((e: IaccElem) => e.sid === sid);
 
-    if (!isDublicate) arr.push({ sid, name, token, exp });
-    // changing the obj if its expireDate is longer
-    else if (isDublicate && dubElem.exp < exp) {
-      const arr2 = arr.map((e: any) =>
-        e.sid === dubElem.sid ? { sid, name, token, exp } : e,
-      );
+      const isDublicate = !!dubElem;
 
-      arr = [...arr2];
+      if (isDublicate && exp * 1000 >= dubElem.exp) {
+        // if the account is dublicate, but the expireDate is longer then put it
+        obj["acc_s"] = obj["acc_s"].map((e: IaccElem) =>
+          e.sid === sid ? { ...e, exp: exp * 1000, token, sid } : e,
+        );
+      } else if (!isDublicate) {
+        // if the account isn't dublicate, then add it
+        obj["acc_s"].push({ sid, name, token, exp: exp * 1000 });
+      }
+      obj.currentId = sid;
     }
 
-    localStorage.setItem("accounts_instagram_clone", JSON.stringify(arr));
-
-    setToken(token);
+    localStorage.setItem(localKey, JSON.stringify(obj));
   }
 
   const [loginUser] = useLoginMutation();
@@ -102,18 +104,19 @@ const useAuth = (formType: "login" | "register") => {
       }
     }
   };
-
-  const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
+  // here logic before pushing
+  const hanLogin: SubmitHandler<ILoginFormValues> = async (
+    e = { username: "oeiioge", password: "fwjrigeiru" },
+  ) => {
     try {
+      //  .trim() for fields
+      for (const key in e) {
+        const keyList = key as keyof typeof e;
+        e[keyList] = e[keyList].trim();
+      }
       const { data } = await loginUser(e).unwrap();
-      // expire token after 12 months
 
-      saveToken(
-        data,
-        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwZjdhYzlhOC1iMzk3LTRjOGYtYWMwMy00MjMwY2E4ZTkyMjciLCJuYW1lIjoicGV0ZXIiLCJlbWFpbCI6ImZ3aWpvd2VAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc4NzkzOTE1MiwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.TK5ZOwiC1ejSe9uocty_mfdkoFEYtq4cLc9b0R9fIz4",
-        12,
-      );
-
+      saveToken(data);
       toast.custom(
         (t) => (
           <CustomToaster
