@@ -12,6 +12,7 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 import Logo from "@/public/instagram.svg";
 
@@ -45,7 +46,7 @@ const actionList: IactionList[] = [
   },
 ];
 
-export const SideBar = () => {
+export const SideBar = async () => {
   return (
     <aside className="fixed left-0 top-0 bottom-0 border-r h-full w-[270px] flex flex-col justify-between">
       <div>
@@ -65,7 +66,7 @@ export const SideBar = () => {
             return (
               <Link
                 href={e?.url as string}
-                key={`${e.name}-i`}
+                key={`${e.name}-${i}`}
                 className="flex gap-3 items-center p-[10px_20px] hover:bg-blue-300 rounded-l-2xl hover:border-r-[4px] hover:border-r-blue-700 duration-400 hover:text-blue-900 inter font-[500]"
               >
                 {e.icon}

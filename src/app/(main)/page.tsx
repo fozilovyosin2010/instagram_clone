@@ -1,3 +1,5 @@
+import { LoadingUI } from "@/src/shared/components";
+
 const page = async () => {
   // here use it to check loading suspense
   await new Promise((resolve) => setTimeout(resolve, 2000));

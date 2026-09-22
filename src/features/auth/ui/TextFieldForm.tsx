@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { Eye, EyeOff } from "lucide-react";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { ItextFieldForm } from "../types/type";
 

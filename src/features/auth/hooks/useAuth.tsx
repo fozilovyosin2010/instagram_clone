@@ -29,7 +29,6 @@ const useAuth = (formType: "login" | "register") => {
 
   const router = useRouter();
 
-  // HERE correct login logic
   function saveToken(token: string) {
     const localKey = "instagram_clone";
 
@@ -105,9 +104,7 @@ const useAuth = (formType: "login" | "register") => {
     }
   };
   // here logic before pushing
-  const hanLogin: SubmitHandler<ILoginFormValues> = async (
-    e = { username: "oeiioge", password: "fwjrigeiru" },
-  ) => {
+  const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
       //  .trim() for fields
       for (const key in e) {
@@ -116,7 +113,10 @@ const useAuth = (formType: "login" | "register") => {
       }
       const { data } = await loginUser(e).unwrap();
 
-      saveToken(data);
+      saveToken(
+        data,
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwZjdhYzlhOC1iMzk3LTRjOGYtYWMwMy00MjMwY2E4ZTkyMjciLCJuYW1lIjoicGV0ZXIiLCJlbWFpbCI6ImZ3aWpvd2VAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc4NzkzOTE1MiwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.TK5ZOwiC1ejSe9uocty_mfdkoFEYtq4cLc9b0R9fIz4",
+      );
       toast.custom(
         (t) => (
           <CustomToaster
@@ -151,7 +151,7 @@ const useAuth = (formType: "login" | "register") => {
           ),
           // prevents from dublication & formType to seperate login/register
           {
-            id: `login-toast-success-${formType}`,
+            id: `login-toast-error-${formType}`,
           },
         );
       }

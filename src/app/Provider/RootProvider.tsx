@@ -6,7 +6,7 @@ import { ReactNode, useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "../store/index";
 
-const ReduxProvider = ({ children }: { children: ReactNode }) => {
+const RootProvider = ({ children }: { children: ReactNode }) => {
   const storeRef = useRef<null | AppStore>(null);
 
   if (!storeRef.current) storeRef.current = makeStore();
@@ -20,4 +20,4 @@ const ReduxProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default ReduxProvider;
+export default RootProvider;

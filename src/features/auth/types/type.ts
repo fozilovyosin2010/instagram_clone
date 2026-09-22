@@ -75,3 +75,10 @@ export interface ItextFieldForm {
   type: "text" | "password" | "email";
   field: any;
 }
+
+export interface IaccElem {
+  sid: string;
+  name: string;
+  exp: number;
+  token?: string;
+}

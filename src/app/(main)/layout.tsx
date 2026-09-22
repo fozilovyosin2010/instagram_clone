@@ -1,4 +1,5 @@
-import { Toaster } from "@/src/shared/components/index";
+import { AuthGuardRoot } from "@/src/features/guard";
+import { ToggleBtn } from "@/src/features/toggleTheme";
 import { SideBar } from "@/src/widgets/sidebar";
 
 const layout = ({
@@ -7,14 +8,16 @@ const layout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div>
-      {/* here */}
-      {/* <header className="border-b pb-3">
-            <ToggleBtn />
-          </header> */}
-      <SideBar />
-      <main className="min-h-full ml-[400px]">{children}</main>
-    </div>
+    <AuthGuardRoot>
+      <div>
+        {/* here */}
+        {/* <header className="border-b pb-3">
+        <ToggleBtn />
+      </header>  */}
+        <SideBar />
+        <main className="min-h-full ml-[400px]">{children}</main>
+      </div>
+    </AuthGuardRoot>
   );
 };
 
