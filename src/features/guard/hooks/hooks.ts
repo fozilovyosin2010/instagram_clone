@@ -40,9 +40,13 @@ async function getProfile(token: string) {
     console.log(data);
     return true;
   } catch (error) {
-    // here return "false" only for 401 statusCode
-    console.log(error);
-    return false;
+    // if 401 then false
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      console.log(error);
+      return false;
+    }
+    // else any other error retry
+    return await getProfile(token);
   }
 }
 async function validateTokens(

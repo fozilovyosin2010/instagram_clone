@@ -38,7 +38,7 @@ const page = () => {
       <div className="space-x-2 border p-[20px_40px] rounded-lg text-[16px] max-md:p-[10px_20px] text-center">
         {
           <>
-            <span>Don't have an account yet?</span>
+            <span>{"Don't have an account yet?"}</span>
             <Link href="/register" className="text-purple-600 font-[600]">
               Sign up
             </Link>

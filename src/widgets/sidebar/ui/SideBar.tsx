@@ -77,7 +77,7 @@ export const SideBar = async () => {
         </nav>
       </div>
       <div className="flex gap-3 items-center p-[10px_20px] duration-400 border-t pt-3">
-        <ActionBtn children={actionList} />
+        <ActionBtn list={actionList} />
       </div>
     </aside>
   );

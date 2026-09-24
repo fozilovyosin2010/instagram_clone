@@ -5,7 +5,7 @@ interface ICustomToaster {
   icon: any;
   title: string;
   des: string;
-  type: "error" | "success" | "loading";
+  type: "error" | "success" | "loading" | "info";
   onClose(): void;
 }
 

@@ -13,7 +13,7 @@ import {
 
 import { IactionList } from "../types/type";
 
-export function ActionBtn({ children }: { children: IactionList[] }) {
+export function ActionBtn({ list }: { list: IactionList[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -26,7 +26,7 @@ export function ActionBtn({ children }: { children: IactionList[] }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          {children.map((e, i) => {
+          {list.map((e, i) => {
             if (e.isDestructive)
               return (
                 <div key={`${e.text}-${i}`}>

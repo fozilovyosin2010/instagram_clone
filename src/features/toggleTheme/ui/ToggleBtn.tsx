@@ -11,7 +11,7 @@ export const ToggleBtn = () => {
     setMount(true);
   }, []);
 
-  if (!mount) return;
+  if (!mount) return null;
 
   function hanToggle() {
     setTheme(theme === "dark" ? "light" : "dark");

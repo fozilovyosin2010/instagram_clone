@@ -97,7 +97,7 @@ const useAuth = (formType: "login" | "register") => {
           ),
           // prevents from dublication & formType to seperate login/register
           {
-            id: `login-toast-success-${formType}`,
+            id: `register-toast-error-${formType}`,
           },
         );
       }
@@ -111,14 +111,14 @@ const useAuth = (formType: "login" | "register") => {
         const keyList = key as keyof typeof e;
         e[keyList] = e[keyList].trim();
       }
-      // const { data } = await loginUser(e).unwrap();
+      const { data } = await loginUser(e).unwrap();
 
       saveToken(
-        // data,
+        data,
         // miran
         // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiI4YzU1MjUzOC00NGZmLTQ0ODMtODE2YS1kYmM5YmE1NzM5MmEiLCJuYW1lIjoibWlyYW4iLCJlbWFpbCI6ImVmd2lvamZAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc4ODAxNDI3NSwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.xjR1p2ZfojXlQ04frm8EadJ23ZnsTqR9dDdD3iRgPeg",
         // peter
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwZjdhYzlhOC1iMzk3LTRjOGYtYWMwMy00MjMwY2E4ZTkyMjciLCJuYW1lIjoicGV0ZXIiLCJlbWFpbCI6ImZ3aWpvd2VAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc5MDE5MjMwNDIwNSwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.62OqPU8J7vEq5A2mviDZ-omGO5RjQWPWYpIGc3KtO5M",
+        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwZjdhYzlhOC1iMzk3LTRjOGYtYWMwMy00MjMwY2E4ZTkyMjciLCJuYW1lIjoicGV0ZXIiLCJlbWFpbCI6ImZ3aWpvd2VAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc5MDE5MjMwNDIwNSwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.62OqPU8J7vEq5A2mviDZ-omGO5RjQWPWYpIGc3KtO5M",
       );
       toast.custom(
         (t) => (
@@ -132,7 +132,7 @@ const useAuth = (formType: "login" | "register") => {
         ),
         // prevents from dublication & formType to seperate login/register
         {
-          id: `login-toast-error-${formType}`,
+          id: `auth-toast-success-${formType}`,
         },
       );
 
