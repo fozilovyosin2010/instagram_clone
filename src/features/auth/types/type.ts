@@ -1,18 +1,43 @@
 import z from "zod";
 
-export const loginSchema = z.object({
-  username: z
-    .string("Please fill username")
-    .nonempty("Please fill username")
-    .min(3, { message: "Minimum 3 symbols" })
-    .max(20, { message: "Maximum 20 symbols" }),
+import { validObjSchema } from "@/src/features/guard/types/type";
 
-  password: z
-    .string("Please fill password")
-    .nonempty("Please fill password")
-    .min(4, { message: "Minimum 4 symbols" })
-    .max(20, { message: "Maximum 20 symbols" }),
-});
+export const loginSchema = z
+  .object({
+    username: z
+      .string("Please fill username")
+      .nonempty("Please fill username")
+      .min(3, { message: "Minimum 3 symbols" })
+      .max(20, { message: "Maximum 20 symbols" }),
+
+    password: z
+      .string("Please fill password")
+      .nonempty("Please fill password")
+      .min(4, { message: "Minimum 4 symbols" })
+      .max(20, { message: "Maximum 20 symbols" }),
+  })
+  .refine(
+    (values) => {
+      try {
+        if (typeof window === "undefined") return true;
+
+        const storageKey = "instagram_clone";
+        const account = localStorage.getItem(storageKey);
+
+        if (!account) return true;
+        const validate = validObjSchema.safeParse(JSON.parse(account));
+
+        const isTrue = validate.data?.acc_s.find(
+          (e) => e.name === values.username,
+        );
+
+        return !isTrue;
+      } catch (error) {
+        return error;
+      }
+    },
+    { message: "This account is already logged in", path: ["username"] },
+  );
 
 export const registerSchema = z
   .object({
