@@ -6,6 +6,7 @@ import {
   validObjSchema,
 } from "@/src/features/guard/types/type";
 import axios from "axios";
+import { useToast } from "@/src/shared/hooks";
 
 const storageKey = "instagram_clone";
 
@@ -37,7 +38,6 @@ async function getProfile(token: string) {
       },
     );
 
-    console.log(data);
     return true;
   } catch (error) {
     // if 401 then false
@@ -52,8 +52,6 @@ async function getProfile(token: string) {
 async function validateTokens(
   obj: IaccountObj_Schema,
 ): Promise<IaccountObj_Schema | null> {
-  console.log("func is running!");
-
   // searching for fresh accounts
   const freshAccs = obj.acc_s.filter((e) => e.exp > Date.now());
 
@@ -65,10 +63,7 @@ async function validateTokens(
     freshAccs.find((e) => e.sid === obj.currentId) ?? freshAccs[0];
 
   const res = await getProfile(targetAcc.token);
-  console.log(res, freshAccs);
   if (!res) {
-    console.log("fwehiuh");
-
     // removing invalid target account
     const remTarToken = freshAccs.filter((e) => e.sid !== targetAcc.sid);
 
@@ -90,34 +85,45 @@ async function validateTokens(
 
   return newObj;
 }
-
-// here add toaster for more infos
+// here add 3 status checking | unauthorised | authorised
 export const useAuthGuard = () => {
   const router = useRouter();
 
-  const [isChecking, setIsChecking] = useState(true);
+  const [authStatus, setAuthStatus] = useState<
+    "checking" | "unauthorised" | "authorised"
+  >("checking");
+
+  // here add toaster for more infos
+  const toaster = useToast();
 
   useEffect(() => {
     async function accAuth() {
       try {
         const accounts = localStorage.getItem(storageKey);
 
-        if (!accounts) router.replace("/login");
-        else {
+        if (!accounts) {
+          setAuthStatus("unauthorised");
+
+          toaster.errorToast("unauthorised");
+
+          router.replace("/login");
+        } else {
           const obj = await validateObj(accounts as string);
-          console.log(obj);
           if (!obj) {
+            setAuthStatus("unauthorised");
+
             router.replace("/login");
             localStorage.removeItem(storageKey);
           }
+
+          setAuthStatus("authorised");
         }
-      } finally {
-        setIsChecking(false);
+      } catch {
+        setAuthStatus("unauthorised");
       }
     }
 
-    // running the logic
     accAuth();
   }, [router]);
-  return { isChecking };
+  return { authStatus };
 };

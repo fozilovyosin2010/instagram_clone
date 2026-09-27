@@ -3,12 +3,14 @@
 import { ReactNode } from "react";
 
 import { LoadingUI } from "@/src/shared/components";
-import { useAuthGuard } from "@/src/features/guard/hooks/hooks";
+import { useAuthGuard } from "@/src/features/guard/hooks/useAuthGuard";
 
 export const AuthGuardRoot = ({ children }: { children: ReactNode }) => {
-  const { isChecking } = useAuthGuard();
+  const { authStatus } = useAuthGuard();
 
-  if (isChecking) return <LoadingUI />;
+  if (authStatus === "checking" || authStatus === "unauthorised")
+    return <LoadingUI />;
+
   return <>{children}</>;
 };
 

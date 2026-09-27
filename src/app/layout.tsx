@@ -35,7 +35,7 @@ export default function RootLayout({
         url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Pacifico&display=swap');
       </style>
       <body>
-        <Toaster />
+        <Toaster duration={4000} position="top-center" />
 
         <RootProvider>{children}</RootProvider>
       </body>

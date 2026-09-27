@@ -1,5 +1,3 @@
-import { CustomToaster } from "@/src/shared/components/custom/Toaster/Toaster";
-
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import {
@@ -10,13 +8,13 @@ import {
 } from "@/src/features/auth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { CircleCheck, CircleX } from "lucide-react";
+
 import { IaccElem, IRegisterFormValues, registerSchema } from "../types/type";
 import { useRegisterMutation } from "../api/authApi";
 import { useRouter } from "next/navigation";
 
 import { jwtDecode } from "jwt-decode";
+import { useToast } from "@/src/shared/hooks";
 
 const useAuth = (formType: "login" | "register") => {
   const {
@@ -70,6 +68,9 @@ const useAuth = (formType: "login" | "register") => {
   const [loginUser] = useLoginMutation();
   const [registerUser] = useRegisterMutation();
 
+  // Toaster
+  const { errorToast, successToast, infoToast } = useToast();
+
   const hanRegister: SubmitHandler<IRegisterFormValues> = async (e) => {
     try {
       await registerUser(e).unwrap();
@@ -81,29 +82,27 @@ const useAuth = (formType: "login" | "register") => {
 
       await hanLogin(obj);
     } catch (error) {
-      if ((error as IresAuth).data?.errors) {
-        const errorMessage: string | any = (
-          error as IresAuth
-        ).data.errors?.join(" ");
-        toast.custom(
-          (t) => (
-            <CustomToaster
-              type="error"
-              icon={<CircleX />}
-              title="Error"
-              des={errorMessage as string}
-              onClose={() => toast.dismiss(t)}
-            />
-          ),
-          // prevents from dublication & formType to seperate login/register
-          {
-            id: `register-toast-error-${formType}`,
-          },
-        );
-      }
+      // if ((error as IresAuth).data?.errors) {
+      //   const errorMessage: string | any = (
+      //     error as IresAuth
+      //   ).data.errors?.join(" ");
+      //   console.log(errorMessage);
+      // }
+
+      // console.log(error);
+
+      // errorToast("Register failed!");
+
+      console.log(error);
+
+      const errorMessage = (error as IresAuth).data.errors?.join(" ");
+      console.log(errorMessage);
+
+      errorToast("register failed!");
+      infoToast(errorMessage ?? "");
     }
   };
-  // here logic before pushing
+
   const hanLogin: SubmitHandler<ILoginFormValues> = async (e) => {
     try {
       //  .trim() for fields
@@ -113,51 +112,19 @@ const useAuth = (formType: "login" | "register") => {
       }
       const { data } = await loginUser(e).unwrap();
 
-      saveToken(
-        data,
-        // miran
-        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiI4YzU1MjUzOC00NGZmLTQ0ODMtODE2YS1kYmM5YmE1NzM5MmEiLCJuYW1lIjoibWlyYW4iLCJlbWFpbCI6ImVmd2lvamZAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc4ODAxNDI3NSwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.xjR1p2ZfojXlQ04frm8EadJ23ZnsTqR9dDdD3iRgPeg",
-        // peter
-        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwZjdhYzlhOC1iMzk3LTRjOGYtYWMwMy00MjMwY2E4ZTkyMjciLCJuYW1lIjoicGV0ZXIiLCJlbWFpbCI6ImZ3aWpvd2VAZ21haWwuY29tIiwic3ViIjoiIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc5MDE5MjMwNDIwNSwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.62OqPU8J7vEq5A2mviDZ-omGO5RjQWPWYpIGc3KtO5M",
-      );
-      toast.custom(
-        (t) => (
-          <CustomToaster
-            type="success"
-            icon={<CircleCheck color="#fff" />}
-            title="Success"
-            des="You are successfully logged in!"
-            onClose={() => toast.dismiss(t)}
-          />
-        ),
-        // prevents from dublication & formType to seperate login/register
-        {
-          id: `auth-toast-success-${formType}`,
-        },
-      );
+      saveToken(data);
+
+      successToast("You are successfully logged in!");
 
       router.push("/");
     } catch (error) {
-      if ((error as IresAuth).data?.errors) {
-        const errorMessage: string | any = (
-          error as IresAuth
-        ).data.errors?.join(" ");
-        toast.custom(
-          (t) => (
-            <CustomToaster
-              type="error"
-              icon={<CircleX />}
-              title="Error"
-              des={errorMessage as string}
-              onClose={() => toast.dismiss(t)}
-            />
-          ),
-          // prevents from dublication & formType to seperate login/register
-          {
-            id: `login-toast-error-${formType}`,
-          },
-        );
-      }
+      console.log(error);
+
+      const errorMessage = (error as IresAuth).data.errors?.join(" ");
+      console.log(errorMessage);
+
+      errorToast("login failed!");
+      infoToast(errorMessage ?? "");
     }
   };
 

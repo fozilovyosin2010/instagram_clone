@@ -12,10 +12,12 @@ export const CustomToaster = ({ icon, des, type, onClose }: ICustomToaster) => {
   return (
     <div
       className={clsx(
-        "relative overflow-hidden rounded-lg bg-linear-to-tr text-[#fff] font-[600] flex justify-between items-center gap-4 p-[10px_15px] w-full max-w-[300px] shadow-2xl max-md:gap-1 max-md:p-[5px_10px]",
+        "relative overflow-hidden rounded-lg bg-linear-to-tr text-[#fff] font-[600] flex justify-between items-center gap-4 p-[10px_15px] w-full max-w-[300px] shadow-2xl max-md:gap-1 ",
         type == "success"
-          ? "from-green-400 to-green-600 border-[2px] border-green-600 dark:from-green-600 dark:to-green-800 "
-          : "from-red-500 to-red-600 border-[2px] border-red-600 dark:from-red-600 dark:to-red-800 ",
+          ? "from-green-400 to-green-600 border-[2px] border-green-600 dark:from-green-600 dark:to-green-800"
+          : type === "info"
+            ? "from-yellow-400 to-yellow-600 border-[2px] border-yellow-600 dark:from-yellow-600 dark:to-yellow-800"
+            : "from-red-500 to-red-600 border-[2px] border-red-600 dark:from-red-600 dark:to-red-800 ",
       )}
     >
       <div
