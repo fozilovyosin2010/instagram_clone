@@ -28,7 +28,7 @@ export const loginSchema = z
         const validate = validObjSchema.safeParse(JSON.parse(account));
 
         const isTrue = validate.data?.acc_s.find(
-          (e) => e.name === values.username,
+          (e) => e.name === values.username && e.exp > Date.now(),
         );
 
         return !isTrue;
