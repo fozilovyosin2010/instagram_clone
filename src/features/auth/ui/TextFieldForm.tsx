@@ -28,7 +28,7 @@ const TextFieldForm = ({
           "group-focus-within:top-0 group-focus-within:text-[14px] pointer-events-none duration-300 truncate max-w-full",
 
           !field?.value?.trim()
-            ? "bg-[#fff] absolute left-0 top-4 mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)] max-md:top-3"
+            ? "bg-[#fff] absolute left-0 top-[calc((100%-21px)/2)] mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]"
             : "bg-[#fff] absolute left-0 top-0 mx-2 text-[#857a7a] text-[14px] truncate z-20 dark:bg-[rgb(20,20,22)]",
         )}
       >
@@ -36,7 +36,7 @@ const TextFieldForm = ({
           className={clsx(
             // if error is true
             errorMessage && "text-red-500",
-            "font-[600]",
+            "font-[600] max-sm:max-w-[220px] truncate",
           )}
         >
           {errorMessage || label}
@@ -46,7 +46,7 @@ const TextFieldForm = ({
         <input
           {...field}
           value={field?.value ?? ""}
-          className="p-2 w-full border-none text-[14px] font-[600] relative z-10 outline-none pt-[20px] bg-transparent max-md:p-1 max-md:pt-[15px]"
+          className="p-2 w-full border-none text-[14px] font-[600] relative z-10 outline-none bg-transparent max-md:px-1 max-md:pb-1 pt-[22px]"
           type={
             type === "password" ? (isShowingPass ? "password" : "text") : type
           }
