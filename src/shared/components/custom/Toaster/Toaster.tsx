@@ -27,7 +27,7 @@ export const CustomToaster = ({ icon, des, type, onClose }: ICustomToaster) => {
       ></div>
       {icon}
       <div className="space-y-[3px]">
-        <p className="max-w-[180px] truncate text-[12px]">{des}</p>
+        <p className="max-w-[180px] text-[12px]">{des}</p>
       </div>
       <button onClick={onClose}>
         <X

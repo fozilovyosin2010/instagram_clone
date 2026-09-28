@@ -85,7 +85,7 @@ async function validateTokens(
 
   return newObj;
 }
-// here add 3 status checking | unauthorised | authorised
+
 export const useAuthGuard = () => {
   const router = useRouter();
 
@@ -103,7 +103,6 @@ export const useAuthGuard = () => {
 
         if (!accounts) {
           setAuthStatus("unauthorised");
-
           toaster.errorToast("unauthorised");
 
           router.replace("/login");
@@ -111,6 +110,7 @@ export const useAuthGuard = () => {
           const obj = await validateObj(accounts as string);
           if (!obj) {
             setAuthStatus("unauthorised");
+            toaster.errorToast("unauthorised");
 
             router.replace("/login");
             localStorage.removeItem(storageKey);
@@ -120,6 +120,7 @@ export const useAuthGuard = () => {
         }
       } catch {
         setAuthStatus("unauthorised");
+        toaster.errorToast("unauthorised");
       }
     }
 

@@ -95,11 +95,11 @@ const useAuth = (formType: "login" | "register") => {
 
       console.log(error);
 
-      const errorMessage = (error as IresAuth).data.errors?.join(" ");
+      const errorMessage = (error as IresAuth).data.errors?.join(" ") ?? "";
       console.log(errorMessage);
 
       errorToast("register failed!");
-      infoToast(errorMessage ?? "");
+      infoToast(errorMessage);
     }
   };
 
@@ -120,11 +120,11 @@ const useAuth = (formType: "login" | "register") => {
     } catch (error) {
       console.log(error);
 
-      const errorMessage = (error as IresAuth).data.errors?.join(" ");
+      const errorMessage = (error as IresAuth).data.errors?.join(" ") ?? "";
       console.log(errorMessage);
 
       errorToast("login failed!");
-      infoToast(errorMessage ?? "");
+      infoToast(errorMessage);
     }
   };
 
