@@ -27,21 +27,32 @@ export function ActionBtn({ list }: { list: IactionList[] }) {
       <DropdownMenuContent>
         <DropdownMenuGroup>
           {list.map((e, i) => {
-            if (e.isDestructive)
-              return (
-                <div key={`${e.text}-${i}`}>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive">
-                    {e.icon}
-                    {e.text}
-                  </DropdownMenuItem>
-                </div>
-              );
+            // if (e.isDestructive)
+            //   return (
+            //     <div key={`${e.text}-${i}`}>
+            //       <DropdownMenuSeparator />
+            //       <DropdownMenuItem variant="destructive">
+            //         {e.icon}
+            //         {e.text}
+            //       </DropdownMenuItem>
+            //     </div>
+            //   );
+            // return (
+            //   <DropdownMenuItem key={`${e.text}-${i}`}>
+            //     {e.icon}
+            //     {e.text}
+            //   </DropdownMenuItem>
+            // );
             return (
-              <DropdownMenuItem key={`${e.text}-${i}`}>
-                {e.icon}
-                {e.text}
-              </DropdownMenuItem>
+              <div key={`${e.text}-${i}`}>
+                {e.isDestructive && <DropdownMenuSeparator />}
+                <DropdownMenuItem
+                  variant={e.isDestructive ? "destructive" : "default"}
+                >
+                  {e.icon}
+                  {e.text}
+                </DropdownMenuItem>
+              </div>
             );
           })}
         </DropdownMenuGroup>
