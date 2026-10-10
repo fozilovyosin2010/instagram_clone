@@ -32,8 +32,8 @@ export const loginSchema = z
         );
 
         return !isTrue;
-      } catch (error) {
-        return error;
+      } catch {
+        return true;
       }
     },
     { message: "This account is already logged in", path: ["username"] },
@@ -104,6 +104,7 @@ export interface ItextFieldForm {
 export interface IaccElem {
   sid: string;
   name: string;
+  profileImg: string | null;
   exp: number;
-  token?: string;
+  token: string;
 }

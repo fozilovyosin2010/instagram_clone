@@ -7,7 +7,7 @@ export type IaccountObj_Schema = z.infer<typeof validObjSchema>;
 const Iacc_s_Schema = z.object({
   sid: z.string(),
   name: z.string(),
-
+  profileImg: z.string().nullable(),
   exp: z.number(),
   token: z.string(),
 });

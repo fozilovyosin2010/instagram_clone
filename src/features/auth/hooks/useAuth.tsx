@@ -18,21 +18,20 @@ import { useToast } from "@/src/shared/hooks";
 import { IaccountObj_Schema, validObjSchema } from "../../guard/types/type";
 import axios from "axios";
 
-// here check the code and then continue useActionBtn.ts
 const useAuth = (formType: "login" | "register") => {
   const {
     handleSubmit,
     formState: { isSubmitting },
     control,
-  } = useForm<any>({
+  } = useForm<ILoginFormValues | IRegisterFormValues>({
     resolver: zodResolver(formType === "login" ? loginSchema : registerSchema),
   });
 
   const router = useRouter();
 
   async function getProfileImg(token: string): Promise<string | null> {
-    const { sid } = jwtDecode<{ sid: string }>(token);
     try {
+      const { sid } = jwtDecode<{ sid: string }>(token);
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API}/UserProfile/get-user-profile-by-id?id=${sid}`,
         {
@@ -43,7 +42,7 @@ const useAuth = (formType: "login" | "register") => {
       );
       console.log(data.data?.image);
 
-      return data.data.image;
+      return data?.data.image ?? "";
     } catch (error) {
       console.log(error);
 
@@ -52,56 +51,62 @@ const useAuth = (formType: "login" | "register") => {
   }
 
   async function saveToken(token: string) {
-    const storageKey = "instagram_clone";
+    try {
+      const storageKey = "instagram_clone";
 
-    const { sid, name, exp } = jwtDecode<{
-      sid: string;
-      name: string;
-      exp: number;
-    }>(token);
+      const { sid, name, exp } = jwtDecode<{
+        sid: string;
+        name: string;
+        exp: number;
+      }>(token);
 
-    const img = await getProfileImg(token);
+      const img = await getProfileImg(token);
 
-    const userObj = { sid, name, token, exp: exp * 1000, profileImg: img };
+      const userObj = { sid, name, token, exp: exp * 1000, profileImg: img };
 
-    const accounts = localStorage.getItem(storageKey);
+      const accounts = localStorage.getItem(storageKey);
 
-    let obj: IaccountObj_Schema = { currentId: sid, acc_s: [userObj] };
+      let obj: IaccountObj_Schema = { currentId: sid, acc_s: [userObj] };
 
-    if (accounts) {
-      try {
-        const parsedObj = validObjSchema.safeParse(JSON.parse(accounts));
+      if (accounts) {
+        try {
+          const parsedObj = validObjSchema.safeParse(JSON.parse(accounts));
 
-        if (parsedObj.success) {
-          obj = parsedObj.data;
+          if (parsedObj.success) {
+            obj = parsedObj.data;
 
-          const dubElem = obj["acc_s"].find((e: IaccElem) => e.sid === sid);
+            const dubElem = obj["acc_s"].find((e: IaccElem) => e.sid === sid);
 
-          const isDublicate = !!dubElem;
+            const isDublicate = !!dubElem;
 
-          if (isDublicate && exp * 1000 >= dubElem.exp) {
-            // if the account is dublicate, but the expireDate is longer then put it
-            obj.acc_s = obj.acc_s.map((e: IaccElem) =>
-              // e.sid === sid ? { sid, name, token, exp: exp * 1000 } : e,
-              e.sid === sid ? userObj : e,
-            );
-          } else if (!isDublicate) {
-            // if the account isn't dublicate, then add it
-            obj.acc_s = [...obj.acc_s, userObj];
+            if (isDublicate && exp * 1000 >= dubElem.exp) {
+              // if the account is dublicate, but the expireDate is longer then put it
+              obj.acc_s = obj.acc_s.map((e: IaccElem) =>
+                // e.sid === sid ? { sid, name, token, exp: exp * 1000 } : e,
+                e.sid === sid ? userObj : e,
+              );
+            } else if (!isDublicate) {
+              // if the account isn't dublicate, then add it
+              obj.acc_s = [...obj.acc_s, userObj];
+            }
+            obj.currentId = sid;
+          } else {
+            console.log(parsedObj.error);
+            localStorage.removeItem(storageKey);
           }
-          obj.currentId = sid;
-        } else {
-          console.log(parsedObj.error);
+        } catch (error) {
+          console.log(error);
+
           localStorage.removeItem(storageKey);
         }
-      } catch (error) {
-        console.log(error);
-
-        localStorage.removeItem(storageKey);
       }
-    }
 
-    localStorage.setItem(storageKey, JSON.stringify(obj));
+      localStorage.setItem(storageKey, JSON.stringify(obj));
+    } catch (error) {
+      console.error(error);
+
+      throw error;
+    }
   }
 
   const [loginUser] = useLoginMutation();
@@ -148,7 +153,7 @@ const useAuth = (formType: "login" | "register") => {
     try {
       const { data } = await loginUser(obj).unwrap();
 
-      saveToken(data);
+      await saveToken(data);
 
       successToast("You are successfully logged in!");
 
