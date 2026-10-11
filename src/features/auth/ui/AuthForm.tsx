@@ -9,14 +9,14 @@ import { LoaderCircle } from "lucide-react";
 import useAuth from "@/src/features/auth/hooks/useAuth";
 import { IauthForm } from "@/src/features/auth/types/type";
 import TextFieldForm from "./TextFieldForm";
-import { Controller } from "react-hook-form";
+import { Controller, type Control } from "react-hook-form";
 
 export const AuthForm = ({ formType, inpFields, btnSubmit }: IauthForm) => {
   const { isSubmitting, onSubmit, control } = useAuth(formType);
 
   return (
     <form
-      onSubmit={onSubmit as any}
+      onSubmit={onSubmit}
       className="flex flex-col justify-between gap-[50px]"
     >
       <div className="flex flex-col gap-3">
@@ -25,7 +25,7 @@ export const AuthForm = ({ formType, inpFields, btnSubmit }: IauthForm) => {
             <Controller
               key={`${e.name}-${i}`}
               name={e.name}
-              control={control}
+              control={control as Control<any>}
               render={({ field, fieldState }) => (
                 <TextFieldForm
                   errorMessage={fieldState.error?.message}

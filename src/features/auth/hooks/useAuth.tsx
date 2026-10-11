@@ -19,12 +19,22 @@ import { IaccountObj_Schema, validObjSchema } from "../../guard/types/type";
 import axios from "axios";
 
 const useAuth = (formType: "login" | "register") => {
+  // Login form
   const {
-    handleSubmit,
-    formState: { isSubmitting },
-    control,
-  } = useForm<ILoginFormValues | IRegisterFormValues>({
-    resolver: zodResolver(formType === "login" ? loginSchema : registerSchema),
+    handleSubmit: LoginHandleSumbit,
+    formState: { isSubmitting: LoginIsSubmitting },
+    control: LoginControl,
+  } = useForm<ILoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  // Register form
+  const {
+    handleSubmit: RegisterHandleSumbit,
+    formState: { isSubmitting: RegisterIsSubmitting },
+    control: RegisterControl,
+  } = useForm<IRegisterFormValues>({
+    resolver: zodResolver(registerSchema),
   });
 
   const router = useRouter();
@@ -133,7 +143,7 @@ const useAuth = (formType: "login" | "register") => {
         password: e.password.trim(),
       };
 
-      await hanLogin(obj);
+      // await hanLogin(obj);
     } catch (error) {
       // const errorMessage = (error as IresAuth).data.errors?.join(" ") ?? "";
       // console.log(errorMessage);
@@ -165,11 +175,19 @@ const useAuth = (formType: "login" | "register") => {
     }
   };
 
-  return {
-    isSubmitting,
-    control,
-    onSubmit: handleSubmit(formType === "login" ? hanLogin : hanRegister),
-  };
+  return formType === "login"
+    ? {
+        isSubmitting: LoginIsSubmitting,
+        control: LoginControl,
+
+        onSubmit: LoginHandleSumbit(hanLogin),
+      }
+    : {
+        isSubmitting: RegisterIsSubmitting,
+        control: RegisterControl,
+
+        onSubmit: RegisterHandleSumbit(hanRegister),
+      };
 };
 
 export default useAuth;
