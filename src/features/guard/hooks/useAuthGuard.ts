@@ -7,8 +7,7 @@ import {
 } from "@/src/features/guard/types/type";
 import axios from "axios";
 import { useToast } from "@/src/shared/hooks";
-
-const storageKey = "instagram_clone";
+import { storageKey } from "@/src/shared/model";
 
 // validate through schema
 function validateObj(jsonObj: string) {
@@ -56,7 +55,6 @@ async function getProfile(token: string) {
   }
 }
 
-// here check this code then move to useActionBtn.ts
 export const useAuthGuard = () => {
   const router = useRouter();
 
@@ -64,7 +62,15 @@ export const useAuthGuard = () => {
     "checking" | "unauthorised" | "authorised"
   >("checking");
 
+  const [accounts, setAccount] = useState<IaccountObj_Schema | null>(null);
+
   const toaster = useToast();
+
+  const [trigger, setTrigger] = useState(false);
+
+  function resetFunc() {
+    setTrigger((e) => !e);
+  }
 
   useEffect(() => {
     let isMount = true;
@@ -93,7 +99,7 @@ export const useAuthGuard = () => {
           const remTarToken = freshAccs.filter((e) => e.sid !== targetAcc.sid);
           if (remTarToken.length === 0) {
             toaster.infoToast(
-              "Your current account is expired! Please, login again!",
+              "Your current account is expired or invalid! Please, login again!",
             );
 
             throw new Error("expired_accounts");
@@ -139,10 +145,9 @@ export const useAuthGuard = () => {
 
           return;
         }
-        const validateWithSchema = validateObj(accounts as string);
+        const validateWithSchema = validateObj(accounts);
 
         const validateWithApi = await validateAccounts(validateWithSchema);
-        console.log(validateWithApi);
 
         if (!isMount) return;
 
@@ -153,6 +158,7 @@ export const useAuthGuard = () => {
           return;
         }
 
+        setAccount(validateWithApi);
         setAuthStatus("authorised");
       } catch {
         setAuthStatus("unauthorised");
@@ -167,7 +173,7 @@ export const useAuthGuard = () => {
     return () => {
       isMount = false;
     };
-  }, []);
+  }, [trigger]);
 
-  return { authStatus };
+  return { authStatus, accounts, resetFunc };
 };

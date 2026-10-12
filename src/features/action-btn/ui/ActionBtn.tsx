@@ -12,13 +12,19 @@ import {
 } from "@/src/shared/components/";
 
 import { IactionList } from "../types/type";
-
-function hanOnClick(text: string) {
-  // here
-  // if (text === "Log out")Logout
-}
+import { useActionBtn } from "../hooks/useActionBtn";
 
 export function ActionBtn({ list }: { list: IactionList[] }) {
+  const { LogOut } = useActionBtn();
+
+  function hanOnClick(text: string) {
+    // here
+
+    if (text === "Log out") LogOut();
+
+    console.log(text);
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger

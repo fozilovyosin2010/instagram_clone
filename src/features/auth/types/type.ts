@@ -1,6 +1,7 @@
 import z from "zod";
 
 import { validObjSchema } from "@/src/features/guard/types/type";
+import { storageKey } from "@/src/shared/model";
 
 export const loginSchema = z
   .object({
@@ -21,7 +22,6 @@ export const loginSchema = z
       try {
         if (typeof window === "undefined") return true;
 
-        const storageKey = "instagram_clone";
         const account = localStorage.getItem(storageKey);
 
         if (!account) return true;

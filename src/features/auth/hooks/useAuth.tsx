@@ -17,6 +17,7 @@ import { jwtDecode } from "jwt-decode";
 import { useToast } from "@/src/shared/hooks";
 import { IaccountObj_Schema, validObjSchema } from "../../guard/types/type";
 import axios from "axios";
+import { storageKey } from "@/src/shared/model";
 
 const useAuth = (formType: "login" | "register") => {
   // Login form
@@ -62,8 +63,6 @@ const useAuth = (formType: "login" | "register") => {
 
   async function saveToken(token: string) {
     try {
-      const storageKey = "instagram_clone";
-
       const { sid, name, exp } = jwtDecode<{
         sid: string;
         name: string;
