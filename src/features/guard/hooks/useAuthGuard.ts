@@ -55,6 +55,7 @@ async function getProfile(token: string) {
   }
 }
 
+// here check this code then move to useActionBtn.ts
 export const useAuthGuard = () => {
   const router = useRouter();
 
@@ -148,7 +149,6 @@ export const useAuthGuard = () => {
         const validateWithSchema = validateObj(accounts);
 
         const validateWithApi = await validateAccounts(validateWithSchema);
-
         if (!isMount) return;
 
         if (!validateWithApi) {
