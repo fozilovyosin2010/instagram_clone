@@ -30,16 +30,19 @@ const pageList = [
 
 const actionList: IactionList[] = [
   {
+    id: 23,
     text: "Setting",
     icon: <Settings />,
     isDestructive: false,
   },
   {
+    id: 34,
     text: "Switch account",
     icon: <ArrowLeftRight />,
     isDestructive: false,
   },
   {
+    id: 34,
     text: "Log out",
     icon: <LogOut />,
     isDestructive: true,
