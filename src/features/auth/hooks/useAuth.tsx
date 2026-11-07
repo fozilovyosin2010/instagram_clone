@@ -51,7 +51,6 @@ const useAuth = (formType: "login" | "register") => {
           },
         },
       );
-      console.log(data.data?.image);
 
       return data?.data.image ?? "";
     } catch (error) {
@@ -130,7 +129,10 @@ const useAuth = (formType: "login" | "register") => {
     const errorMessage = (error as IresAuth).data?.errors?.join(" ") ?? "";
 
     errorToast(title);
-    infoToast(errorMessage);
+
+    setTimeout(() => {
+      infoToast(errorMessage);
+    }, 500);
   };
 
   const hanRegister: SubmitHandler<IRegisterFormValues> = async (e) => {
@@ -142,14 +144,8 @@ const useAuth = (formType: "login" | "register") => {
         password: e.password.trim(),
       };
 
-      // await hanLogin(obj);
+      await hanLogin(obj);
     } catch (error) {
-      // const errorMessage = (error as IresAuth).data.errors?.join(" ") ?? "";
-      // console.log(errorMessage);
-
-      // errorToast("register failed!");
-      // infoToast(errorMessage);
-
       handleError("Register failed!", error as IresAuth);
     }
   };

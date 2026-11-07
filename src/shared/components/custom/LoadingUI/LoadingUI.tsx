@@ -12,7 +12,7 @@ export const LoadingUI = () => {
           alt="instagram-logo"
           className="w-[150px] h-[150px] max-md:w-[120px] max-md:h-[120px]"
         />
-        <div className="container1 text-gray-400  dark:text-[#fff]">
+        <div className="container1 text-gray-600  dark:text-[#fff]">
           <div className="block1 flex justify-center items-center gap-2">
             <p className="text-[18px] text-[500] font-[600] max-sm:text-[16px]">
               from
@@ -21,7 +21,7 @@ export const LoadingUI = () => {
               Yosin
             </span>
           </div>
-          <div className="block2 max-sm:text-[16px]">
+          <div className="block2 max-sm:text-[16px] font-[600]">
             © 2024 Instagram from Yosin
           </div>
         </div>

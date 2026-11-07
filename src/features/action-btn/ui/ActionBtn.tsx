@@ -14,15 +14,18 @@ import {
 import { IactionList } from "../types/type";
 import { useActionBtn } from "../hooks/useActionBtn";
 
+import SwitchAccDrawer from "./SwitchDrawer";
+
 export function ActionBtn({ list }: { list: IactionList[] }) {
-  const { LogOut } = useActionBtn();
+  const { LogOut, switchAccount, accounts, resetFunc } = useActionBtn();
 
-  function hanOnClick(text: string) {
-    // here
+  function hanOnClick(text: string, id: number) {
+    // for Log out
+    if (id === 56) LogOut();
+    // for switch acc to get fresh and valid accs
+    if (id === 34) resetFunc();
 
-    if (text === "Log out") LogOut();
-
-    console.log(text);
+    console.log(text, id);
   }
 
   return (
@@ -39,14 +42,27 @@ export function ActionBtn({ list }: { list: IactionList[] }) {
         <DropdownMenuGroup>
           {list.map((e, i) => {
             return (
-              <div onClick={() => hanOnClick(e.text)} key={`${e.text}-${i}`}>
-                {e.isDestructive && <DropdownMenuSeparator />}
-                <DropdownMenuItem
-                  variant={e.isDestructive ? "destructive" : "default"}
-                >
-                  {e.icon}
-                  {e.text}
-                </DropdownMenuItem>
+              <div key={`${e.text}-${i}`}>
+                {e.id === 34 ? (
+                  <SwitchAccDrawer
+                    icon={e.icon}
+                    text={e.text}
+                    accountObj={accounts}
+                    onClick={() => hanOnClick(e.text, e.id)}
+                    onSwitchAcc={switchAccount}
+                  />
+                ) : (
+                  <div>
+                    {e.isDestructive && <DropdownMenuSeparator />}
+                    <DropdownMenuItem
+                      onClick={() => hanOnClick(e.text, e.id)}
+                      variant={e.isDestructive ? "destructive" : "default"}
+                    >
+                      {e.icon}
+                      {e.text}
+                    </DropdownMenuItem>
+                  </div>
+                )}
               </div>
             );
           })}

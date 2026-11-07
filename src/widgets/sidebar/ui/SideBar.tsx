@@ -12,13 +12,10 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
-import { headers } from "next/headers";
 
 import Logo from "@/public/instagram.svg";
 
-import { ActionBtn } from "@/src/features/action-btn";
-import { IactionList } from "@/src/features/action-btn/types/type";
-
+import { ActionBtn, type IactionList } from "@/src/features/action-btn";
 const pageList = [
   { icon: <House />, name: "Home", url: "/" },
   { icon: <Compass />, name: "Interestings", url: "/interestings" },
@@ -42,7 +39,7 @@ const actionList: IactionList[] = [
     isDestructive: false,
   },
   {
-    id: 34,
+    id: 56,
     text: "Log out",
     icon: <LogOut />,
     isDestructive: true,

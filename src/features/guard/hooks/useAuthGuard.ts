@@ -1,5 +1,6 @@
+"use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   IaccountObj_Schema,
@@ -55,7 +56,6 @@ async function getProfile(token: string) {
   }
 }
 
-// here check this code then move to useActionBtn.ts
 export const useAuthGuard = () => {
   const router = useRouter();
 
@@ -74,6 +74,7 @@ export const useAuthGuard = () => {
   }
 
   useEffect(() => {
+    console.log("mount");
     let isMount = true;
 
     async function validateAccounts(data: IaccountObj_Schema | null) {
@@ -171,6 +172,8 @@ export const useAuthGuard = () => {
     accAuth();
 
     return () => {
+      console.log("unmount");
+
       isMount = false;
     };
   }, [trigger]);

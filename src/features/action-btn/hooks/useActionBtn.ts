@@ -1,9 +1,12 @@
-import { useAuthGuard } from "@/src/features/guard/hooks/useAuthGuard";
+// continue from here
+import { useAuthGuard } from "@/src/features/guard/";
+
 import { storageKey } from "@/src/shared/model";
+
 import { useToast } from "@/src/shared/hooks";
-// here
+
 export const useActionBtn = () => {
-  // here add log out logic
+  // getting availible accounts
   const { accounts, resetFunc } = useAuthGuard();
 
   const { infoToast } = useToast();
@@ -12,7 +15,9 @@ export const useActionBtn = () => {
     if (accounts) {
       const newArr = accounts.acc_s.filter((e) => e.sid !== accounts.currentId);
 
-      let newAccData = "";
+      const targetAcc = accounts.acc_s.find(
+        (e) => e.sid === accounts.currentId,
+      );
 
       if (newArr.length === 0) localStorage.removeItem(storageKey);
       else {
@@ -21,14 +26,24 @@ export const useActionBtn = () => {
           acc_s: newArr,
         };
 
-        newAccData = JSON.stringify(obj);
+        localStorage.setItem(storageKey, JSON.stringify(obj));
       }
 
-      infoToast("Your account is logged out");
+      infoToast(`Account "${targetAcc?.name}" is logged out`);
 
-      localStorage.setItem(storageKey, newAccData);
       resetFunc();
     }
   }
-  return { LogOut };
+
+  function switchAccount(sid: string) {
+    if (accounts) {
+      const newAccObj = {
+        ...accounts,
+        currentId: sid,
+      };
+
+      localStorage.setItem(storageKey, JSON.stringify(newAccObj));
+    }
+  }
+  return { LogOut, switchAccount, accounts, resetFunc };
 };

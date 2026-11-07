@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+body {
+  position: relative;
+}
+
 .inter {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
